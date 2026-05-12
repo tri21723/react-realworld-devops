@@ -7,4 +7,9 @@ RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-27
     && tar xzvf docker-27.1.1.tgz --strip-components=1 -C /usr/local/bin/ docker/docker \
     && rm docker-27.1.1.tgz
 
+# Install Node.js 16 (using standard gzip tarball for native extraction compatibility)
+RUN curl -fsSLO https://nodejs.org/dist/v16.20.2/node-v16.20.2-linux-x64.tar.gz \
+    && tar -xzf node-v16.20.2-linux-x64.tar.gz -C /usr/local --strip-components=1 --no-same-owner \
+    && rm node-v16.20.2-linux-x64.tar.gz
+
 USER jenkins

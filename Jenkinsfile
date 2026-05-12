@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // FIXME: Hãy thay đổi 'yourdockerhubusername' bằng tên đăng nhập Docker Hub thật của bạn!
         DOCKER_HUB_USER = 'minhtri25' 
         IMAGE_NAME = 'react-realworld-devops'
         REGISTRY_CREDENTIALS_ID = 'docker-hub-credentials'
@@ -18,28 +17,28 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // Chạy npm install bằng container Node 16 tạm thời để không cần cài Node vào Jenkins
-                sh 'docker run --rm -v ${WORKSPACE}:/app -w /app node:16-alpine npm install --legacy-peer-deps'
+                // Chạy npm install trực tiếp trong môi trường của Jenkins
+                sh 'npm install --legacy-peer-deps'
             }
         }
 
         stage('Test') {
             steps {
-                // Chạy test một lần duy nhất (CI=true)
-                sh 'docker run --rm -v ${WORKSPACE}:/app -w /app node:16-alpine sh -c "CI=true npm test"'
+                // Chạy test trực tiếp trong môi trường của Jenkins (CI=true để thoát sau khi test xong)
+                sh 'CI=true npm test'
             }
         }
 
         stage('Build Production') {
             steps {
-                // Biên dịch mã nguồn React tối ưu cho Production
-                sh 'docker run --rm -v ${WORKSPACE}:/app -w /app node:16-alpine npm run build'
+                // Biên dịch mã nguồn React tối ưu cho Production trực tiếp
+                sh 'npm run build'
             }
         }
 
         stage('Docker Build Image') {
             steps {
-                // Tiến hành đóng gói ứng dụng thành Docker Image
+                // Đóng gói ứng dụng thành Docker Image
                 sh "docker build -t ${DOCKER_HUB_USER}/${IMAGE_NAME}:${BUILD_NUMBER} -t ${DOCKER_HUB_USER}/${IMAGE_NAME}:latest ."
             }
         }
