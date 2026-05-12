@@ -1,15 +1,6 @@
 version: '3.8'
 
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: react-devops-app
-    ports:
-      - "4100:4100"
-    restart: always
-
   jenkins:
     build:
       context: .
